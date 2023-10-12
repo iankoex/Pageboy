@@ -221,15 +221,29 @@ internal extension PageboyViewController {
         guard bounces == false else {
             return false
         }
-        
         let previousContentOffset = scrollView.contentOffset
-        if currentIndex == 0 && scrollView.contentOffset.x < scrollView.bounds.size.width {
-            scrollView.contentOffset = CGPoint(x: scrollView.bounds.size.width, y: 0.0)
-        }
-        if currentIndex == (viewControllerCount ?? 1) - 1 && scrollView.contentOffset.x > scrollView.bounds.size.width {
-            scrollView.contentOffset = CGPoint(x: scrollView.bounds.size.width, y: 0.0)
+        if navigationOrientation == .horizontal {
+            disableHorizontalBounce(scrollView)
+        } else {
+            disableVerticalBounce(scrollView)
         }
         return previousContentOffset != scrollView.contentOffset
+    }
+    
+    private func disableHorizontalBounce(_ scrollView: UIScrollView) {
+        if currentIndex == 0 && scrollView.contentOffset.x < scrollView.bounds.size.width ||
+            currentIndex == (viewControllerCount ?? 1) - 1 && scrollView.contentOffset.x > scrollView.bounds.size.width
+        {
+            scrollView.contentOffset = CGPoint(x: scrollView.bounds.size.width, y: 0)
+        }
+    }
+    
+    private func disableVerticalBounce(_ scrollView: UIScrollView) {
+        if currentIndex == 0 && scrollView.contentOffset.y < scrollView.bounds.size.height ||
+            currentIndex == (viewControllerCount ?? 1) - 1 && scrollView.contentOffset.y > scrollView.bounds.size.height
+        {
+            scrollView.contentOffset = CGPoint(x: 0, y: scrollView.bounds.size.height)
+        }
     }
     
     // MARK: Utilities
